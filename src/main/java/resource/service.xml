@@ -26,4 +26,5 @@ http://www.springframework.org/schema/beans/spring-beans.xsd
 		<property name="password" value="${mysql.password}" />
 	</bean>
 	<bean id="fileAction" class="com.chang.file.FileAction" />
+	<bean id="httpAction" class="com.chang.action.HttpAction" />
 </beans>

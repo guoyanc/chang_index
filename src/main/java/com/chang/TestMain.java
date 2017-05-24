@@ -3,9 +3,12 @@ package com.chang;
 import java.io.File;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.chang.action.HttpAction;
 import com.chang.file.FileAction;
 import com.chang.util.ConfigInfo;
 
@@ -14,9 +17,13 @@ public class TestMain {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+
+	private static Logger logger = LogManager.getLogger(TestMain.class.getName());
+	
+	public static void main(String[] args) throws Exception {
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"resource/service.xml");
+//		PropertyConfigurator.configure("./resource/log4j.properties");
 //		BasicDataSource ds = (BasicDataSource) context.getBean(BasicDataSource.class);
 //		ConfigInfo configInfo = (ConfigInfo) context.getBean(ConfigInfo.class);
 //		System.out.println("the file root is : " + configInfo.getCommonFileRoot());
@@ -29,9 +36,11 @@ public class TestMain {
 //		}
 		FileAction fileAction = (FileAction)context.getBean(FileAction.class);
 		ConfigInfo configInfo = (ConfigInfo)context.getBean(ConfigInfo.class);
+		HttpAction httpAction = (HttpAction)context.getBean(HttpAction.class);
 		List<File> list = fileAction.getDirectoryName(fileAction.getSubDirList(configInfo.getCommonFileRoot()));
-		for(int i=0; i<list.size(); i++) {
-			System.out.println("the index " + i + " + is : " + list.get(i));
+		String fileName[] = fileAction.getFileName(list);
+		for(int i = 0; i < fileName.length; i++) {
+			httpAction.getMediaSearchURL("https://www.douban.com/search?source=suggest&q=" + fileName[i].replace(' ', '.'));
 		}
 //		System.out.println(list);
 		
@@ -46,4 +55,5 @@ public class TestMain {
 //			System.out.println("str[" + i + "] = " + str[i]);
 //		}
 	}
+	
 }
